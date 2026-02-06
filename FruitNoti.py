@@ -57,7 +57,8 @@ class FruitNotiApp(tk.Tk):
         super().__init__()
         self.title("FruitNoti OCR Bot")
         self.geometry("500x800")
-        self.resizable(False, False)
+        self.resizable(True, True)
+        self.minsize(500, 400)
         
         self.is_running = False
         self.scan_thread = None
@@ -141,7 +142,7 @@ class FruitNotiApp(tk.Tk):
 
         # Custom Message
         ttk.Label(main_frame, text="Discord Message Text:").pack(anchor="w")
-        self.message_entry = ttk.Entry(main_frame, width=60)
+        self.message_entry = ttk.Entry(main_frame)
         self.message_entry.insert(0, self.config.get("custom_message", "🚨 **Detection Alert!**"))
         self.message_entry.pack(fill="x", pady=(0, 10))
         
