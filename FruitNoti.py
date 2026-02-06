@@ -16,7 +16,7 @@ class SelectionOverlay:
     def __init__(self, callback):
         self.callback = callback
         self.root = tk.Tk()
-        self.root.attributes('-alpha', 0.3)
+        self.root.attributes('-alpha', 0.5)
         self.root.attributes('-fullscreen', True)
         self.root.attributes('-topmost', True)
         self.root.config(cursor="cross")
@@ -36,7 +36,7 @@ class SelectionOverlay:
     def on_press(self, event):
         self.start_x = event.x
         self.start_y = event.y
-        self.rect = self.canvas.create_rectangle(self.start_x, self.start_y, 1, 1, outline='red', width=2)
+        self.rect = self.canvas.create_rectangle(self.start_x, self.start_y, 1, 1, outline='#00FF00', width=3)
 
     def on_drag(self, event):
         self.canvas.coords(self.rect, self.start_x, self.start_y, event.x, event.y)
