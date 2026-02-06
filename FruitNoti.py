@@ -83,17 +83,43 @@ class FruitNotiApp(tk.Tk):
         pytesseract.pytesseract.tesseract_cmd = self.config["tesseract_path"]
 
     def create_widgets(self):
-        main_frame = ttk.Frame(self, padding="20")
-        main_frame.pack(fill="both", expand=True)
+        # Create a main wrapper for scrolling
+        self.container = ttk.Frame(self)
+        self.container.pack(fill="both", expand=True)
+
+        self.canvas = tk.Canvas(self.container, highlightthickness=0)
+        self.scrollbar = ttk.Scrollbar(self.container, orient="vertical", command=self.canvas.yview)
+        
+        # Scrollable inner frame
+        self.scrollable_frame = ttk.Frame(self.canvas, padding="20")
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        )
+
+        # Create window inside canvas
+        self.canvas_window = self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        
+        # Adjust canvas window width to match canvas width
+        self.canvas.bind('<Configure>', self._on_canvas_configure)
+
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+
+        self.canvas.pack(side="left", fill="both", expand=True)
+        self.scrollbar.pack(side="right", fill="y")
+
+        # Bind mouse wheel
+        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+
+        main_frame = self.scrollable_frame
 
         # Styling for the buttons
         style = ttk.Style()
         style.configure("Start.TButton", font=("Segoe UI", 12, "bold"), padding=10)
         style.configure("Stop.TButton", font=("Segoe UI", 12, "bold"), padding=10)
 
-        # Buttons (Pack first to dock at bottom)
-        self.btn_toggle = ttk.Button(main_frame, text="▶ START SCANNER", command=self.toggle_scanner, style="Start.TButton")
-        self.btn_toggle.pack(side="bottom", fill="x", pady=(10, 0))
+        # Buttons (Pack first to dock at bottom? No, in a scrollable frame we pack them in order or use a fixed area)
+        # However, to keep it simple and scrollable, we follow the order.
         
         # Tesseract Path
         ttk.Label(main_frame, text="Tesseract Path:").pack(anchor="w")
@@ -158,6 +184,17 @@ class FruitNotiApp(tk.Tk):
         ttk.Label(main_frame, text="Log:").pack(anchor="w", pady=(10, 0))
         self.log_text = tk.Text(main_frame, height=12, state="disabled", font=("Consolas", 9), bg="#f0f0f0")
         self.log_text.pack(fill="both", expand=True, pady=5)
+
+        # Start/Stop Button at the bottom of the scrollable frame
+        self.btn_toggle = ttk.Button(main_frame, text="▶ START SCANNER", command=self.toggle_scanner, style="Start.TButton")
+        self.btn_toggle.pack(fill="x", pady=(10, 0))
+
+    def _on_canvas_configure(self, event):
+        # Resize the item in the canvas to match the canvas width
+        self.canvas.itemconfig(self.canvas_window, width=event.width)
+
+    def _on_mousewheel(self, event):
+        self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
         
         
 
