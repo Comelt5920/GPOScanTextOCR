@@ -32,7 +32,7 @@ cd GPOScanTextOCR
 
 1. **Install dependencies:**
    ```bash
-   pip install requests pyautogui pytesseract pillow
+   pip install -r requirements.txt
    ```
 
 2. **Run the script:**

@@ -1,0 +1,4 @@
+requests
+pyautogui
+pytesseract
+Pillow
