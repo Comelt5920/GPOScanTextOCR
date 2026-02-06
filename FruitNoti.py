@@ -9,8 +9,17 @@ import pyautogui
 import pytesseract
 from PIL import Image, ImageTk
 import io
+import sys
 
-CONFIG_FILE = os.path.join(os.path.dirname(__file__), "config.json")
+def get_config_path():
+    if getattr(sys, 'frozen', False):
+        # Running as a bundled EXE, save next to the actual .exe file
+        return os.path.join(os.path.dirname(sys.executable), "config.json")
+    else:
+        # Running as a normal script, save next to the source file
+        return os.path.join(os.path.dirname(__file__), "config.json")
+
+CONFIG_FILE = get_config_path()
 
 class SelectionOverlay:
     def __init__(self, callback):
