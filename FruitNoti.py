@@ -89,6 +89,15 @@ class FruitNotiApp(tk.Tk):
         }
         self.load_config()
         
+        # Determine Tesseract path
+        if getattr(sys, 'frozen', False):
+            # If running as EXE, look for bundled Tesseract
+            bundle_dir = getattr(sys, '_MEIPASS', os.path.dirname(sys.executable))
+            bundled_tess = os.path.join(bundle_dir, "Tesseract-OCR", "tesseract.exe")
+            if os.path.exists(bundled_tess):
+                self.config["tesseract_path"] = bundled_tess
+                print(f"Using bundled Tesseract: {bundled_tess}")
+        
         self.create_widgets()
         pytesseract.pytesseract.tesseract_cmd = self.config["tesseract_path"]
 

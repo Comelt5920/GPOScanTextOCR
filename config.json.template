@@ -1,0 +1,10 @@
+{
+    "tesseract_path": "C:\\Program Files\\Tesseract-OCR\\tesseract.exe",
+    "webhook_url": "YOUR_DISCORD_WEBHOOK_HERE",
+    "scan_region": [0, 0, 500, 200],
+    "target_text": "has spawned",
+    "interval": 2.0,
+    "cooldown": 60,
+    "always_on_top": false,
+    "custom_message": "🚨 **Detection Alert!**"
+}
